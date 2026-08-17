@@ -1,0 +1,11 @@
+2026.8.16
+
+I'm thinking which view should i try to build for my graph...the river looks like a planform for now, 
+but the trees are all in a rectangular shape, which is more like a flat view. Should i unify them two?
+
+maybe i can use different colors to represent different species of trees, since beavers have their preferred species and which is 
+a factor that largely afftects their decision-making.
+but for the species i choose that grow near the river, i have to be careful because I guess it depends on which place 
+we assume our area to be, and what kind of climate does it have?
+
+i'd also like my graph to be able to show the different dimension of each tree
