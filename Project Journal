@@ -11,4 +11,8 @@ Done coding for the screen and the river
 Started coding the trees and tried to use random(the built-in module in python) to generate random coordinates for the tree.
 
 2026.8.17
-Refined the tree implement. 
+Refined the tree implement: 
+used different colours to represent different species of trees(according to reasonable probabilies) 
+each tree has their random width and height in a given range, but aligns with the triangle distribution
+
+2026.8.18
