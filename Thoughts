@@ -9,3 +9,19 @@ but for the species i choose that grow near the river, i have to be careful beca
 we assume our area to be, and what kind of climate does it have?
 
 i'd also like my graph to be able to show the different dimension of each tree
+
+
+2026.8.18
+
+my graph is pixels, not in actual proportions to real life. 
+normally a river would have width: 10-30 metres, and a tree would have height: 2-10 metres; diameter: 0.05-0.30 metres.
+
+The problem: tree diameter is tiny compared to river width. A 0.1m tree trunk vs 20m river will make the tree be almost invisible if 
+i change mt graph in meters.
+
+if i stick with pixels but choose ratios that reflect reality.
+My current setup: River width: 300 pixels; Tree width: 5-30 pixels; Tree height: 20-80 pixels
+The ratio of tree width to river width is about 1:10 to 1:30, which is actually similar to reality (0.1m tree vs 10m river is 1:100, 
+but we can exaggerate slightly for visibility).
+
+
