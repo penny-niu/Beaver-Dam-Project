@@ -90,39 +90,19 @@ These exact probabilities and weights are modelling assumptions, not fitted ecol
 
 Each tree agent represents a usable wood unit rather than a whole tree drawn to physical scale.
 
-Effective diameter is generated using a triangular distribution:
+The effective wood dimensions are sampled from triangular distributions:
 
-```math
-d \sim \operatorname{Triangular}(0.05,\ 0.15,\ 0.30)
-```
+| Variable | Minimum | Mode | Maximum |
+|---|---:|---:|---:|
+| Effective diameter `d` | 0.05 m | 0.15 m | 0.30 m |
+| Effective usable length `L` | 0.20 m | 0.40 m | 0.80 m |
 
-where the minimum is 0.05 m, the mode is 0.15 m, and the maximum is 0.30 m.
+A triangular distribution was chosen instead of a uniform distribution because I wanted values near the selected mode to occur more often, while still allowing smaller and larger pieces.
 
-Effective usable length is generated similarly:
+In Python, the idea is equivalent to sampling between a lower and upper bound while specifying the most likely value:
 
-```math
-L \sim \operatorname{Triangular}(0.20,\ 0.40,\ 0.80)
-```
-
-where the minimum is 0.20 m, the mode is 0.40 m, and the maximum is 0.80 m.
-
-I used triangular rather than uniform distributions so that intermediate values near the chosen mode occur more frequently, while smaller and larger pieces remain possible.
-
-For a triangular distribution with minimum `a`, maximum `b`, and mode `c`, the probability density is
-
-```math
-f(x)=
-\begin{cases}
-\dfrac{2(x-a)}{(b-a)(c-a)}, & a\le x\le c,\\[6pt]
-\dfrac{2(b-x)}{(b-a)(b-c)}, & c<x\le b,\\[6pt]
-0, & \text{otherwise}.
-\end{cases}
-```
-
-The tree positions are also randomly generated on either side of the river, with rejection checks used to reduce excessive overlap.
-
----
-
+```python
+random.triangular(minimum, maximum, mode)
 ## 3. Beaver tree-selection model
 
 The behavioural part of the model uses a simplified central-place-foraging-inspired score.
