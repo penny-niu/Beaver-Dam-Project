@@ -103,6 +103,17 @@ In Python, the idea is equivalent to sampling between a lower and upper bound wh
 
 ```python
 random.triangular(minimum, maximum, mode)
+```
+
+These distributions are modelling assumptions rather than measurements fitted to a particular beaver habitat.
+
+The tree positions are also generated pseudo-randomly on either side of the river, with rejection checks used to reduce excessive overlap.
+
+Because the simulation uses the fixed random seed `42`, the same set of tree positions and dimensions can be reproduced each time.
+
+---
+
+
 ## 3. Beaver tree-selection model
 
 The behavioural part of the model uses a simplified central-place-foraging-inspired score.
