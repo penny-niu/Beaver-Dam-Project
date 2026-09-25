@@ -1082,14 +1082,22 @@ Every experiment begins immediately with a completed dam and with both water dep
 
 Because the experiments and the interactive construction run start from different hydraulic states, their settling times should not be compared directly.
 
-### 15.3 Development timeframe
+### 15.3 Timing summary
 
-The project was originally planned as a ten-day personal mathematical-modelling project.
+The main timing choices used in the model are:
 
-In practice, development was spread intermittently from late July to late September 2026. The later stages included experimental analysis, code verification, literature reality checks, replacement of the original rectangular dam geometry, rerunning the experiments, and final documentation.
+| Quantity | Value | Purpose |
+|---|---:|---|
+| Target frame rate | 60 FPS | Controls the interactive simulation display |
+| Interactive time step | variable | Calculated from the actual elapsed frame time |
+| Experimental time step | 0.1 s | Fixed step used for reproducible numerical experiments |
+| Equilibrium hold time | 5 s | Flow conditions must remain within tolerance for this long before equilibrium is accepted |
+| Experiment safety limit | 5000 s | Stops a run if equilibrium is not reached |
 
-A fuller chronology is recorded separately in the project journal.
+The interactive model therefore uses real elapsed frame time rather than assuming that every frame lasts exactly `1/60` s:
 
+```python
+dt = clock.tick(FPS) / 1000.0
 ---
 
 ## 16. Mathematical limitations
