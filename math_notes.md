@@ -1095,9 +1095,9 @@ The main timing choices used in the model are:
 | Experiment safety limit | 5000 s | Stops a run if equilibrium is not reached |
 
 The interactive model therefore uses real elapsed frame time rather than assuming that every frame lasts exactly `1/60` s:
-
 ```python
 dt = clock.tick(FPS) / 1000.0
+
 ---
 
 ## 16. Mathematical limitations
