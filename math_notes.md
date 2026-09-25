@@ -1095,8 +1095,14 @@ The main timing choices used in the model are:
 | Experiment safety limit | 5000 s | Stops a run if equilibrium is not reached |
 
 The interactive model therefore uses real elapsed frame time rather than assuming that every frame lasts exactly `1/60` s:
+
 ```python
 dt = clock.tick(FPS) / 1000.0
+```
+
+By contrast, the controlled experiments use a fixed time step of **0.1 s**, so every parameter case is integrated using the same numerical step.
+
+These timing choices affect the numerical evolution and reported settling time, but they are simulation settings rather than claims about the real timescale of beaver construction.
 
 ---
 
