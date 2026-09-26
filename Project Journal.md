@@ -1,18 +1,16 @@
 # Project Journal
 
-A rough journal of how the project developed from 28 July to 15 September 2026.
-
-Some entries were written at the time, while some dates in the middle were reconstructed afterwards from the order in which I built things. This is not meant to be a formal record — mostly just what I was doing and what I was thinking about along the way.
+A rough journal of how the project developed, sometimes I was too lazy to keep a record 
 
 ---
 
 ## 28 July 2026
 
+I wondered actually whether a beaver could make things easier for itself by cutting a tree so that it falls towards the river when building the dam.
+
 Did some research on beavers, mostly tree choice, how they build dams, what kinds of trees they seem to prefer, etc.
 
-The original thing I was interested in was actually whether a beaver could make things easier for itself by cutting a tree so that it falls towards the river.
-
-Not really sure how I would model that yet. I was thinking maybe cutting angle? centre of mass? direction of fall? It sounds interesting but also immediately feels like it could get very mechanical very quickly.
+Not really sure how I would model that yet. I was thinking maybe cutting angle? centre of mass? direction of fall? 
 
 ---
 
@@ -32,99 +30,72 @@ Very basic at the moment but at least there is something visible now.
 
 ---
 
-## 12 August 2026
+## 10 August 2026
 
 Started adding trees.
 
 Used Python's `random` module to generate positions and stopped them from appearing inside the river.
 
-The first version was a bit chaotic because trees could end up too close together or right against the river edge. Added a gap and some simple overlap checks. Not perfect, but much better.
+The first version was a bit chaotic because trees could end up too close together or right against the river edge. Added a gap and some simple overlap checks. 
 
 ---
 
-## 14 August 2026
+## 12 August 2026
 
-Turned the trees into proper objects instead of just drawing random rectangles directly onto the screen.
+Learnt object-oriented programming and so turned the trees into proper objects instead of just drawing random rectangles directly onto the screen.
 
 This made it much easier to give every tree its own position, dimensions and species later.
 
-I'm starting to understand why object-oriented programming is actually useful rather than just something people tell you to use.
-
 ---
 
-## 16 August 2026
+## 13 August 2026
 
-The view is bothering me. The river is basically top-down, but the trees look more like little rectangles from the side. Should everything really be in one perspective?
+The view is bothering me. The river is basically top-down, but the trees look more like little rectangles from the side. Should everything be in one perspective?
 
 Also thought about using different colours for species because beavers have preferences for different species of trees.
 
 Then if I choose realistic species, should I also define a particular geographical location and climate for the whole model?
 
-Probably don't want to go that far. I'll just let the species and their probabilities represent a simplified hypothetical riverside environment.
-
 ---
 
-## 17 August 2026
+## 14 August 2026
 
 Added different tree species and colours.
 
-Also added random width and height instead of making every tree identical.
-
-I used triangular distributions to make my forest less artificial. I want middle-sized values to be more common but still allow some small and large ones.
-
-Had to remind myself that these dimensions are really more like usable wood dimensions in the model, not literal full-tree measurements. Otherwise the scale starts making no sense again.
+Also added random width and height instead of making every tree identical. I used triangular distributions to make my forest less artificial. 
 
 ---
 
-## 18 August 2026
+## 15 August 2026
 
-Spent quite a while thinking about scale.
+Spent quite a while thinking about scale. 
 
 If I use actual real-life proportions, tree trunks become tiny compared with the river and are basically invisible.
 
 So I think I need to stop treating the drawing scale and the mathematical scale as the same thing.
 
-The visualisation can exaggerate things slightly if it makes the simulation readable. I can still keep the actual model variables in metres later.
+The visualization can exaggerate things slightly if it makes the simulation readable?
 
-Not completely sure how messy this will become when I add the dam.
-
----
-
-## 20 August 2026
-
-Cleaned up tree generation a bit more.
+Also cleaned up tree generation a bit more.
 
 I kept changing the ranges because some forests looked too uniform while others had a few ridiculous trees dominating everything visually.
 
-This is one of those things that looked simple at first — "just generate some trees" — but it actually took a few passes before it stopped looking obviously artificial.
 
 ---
 
-## 22 August 2026
+## 17 August 2026
 
 Started thinking properly about how the beaver should choose trees.
 
 From the research I've done, central-place foraging seems useful here: distance matters, but so do the size and species of the tree.
 
-I don't want to pretend I'm modelling the beaver's actual energy budget, so maybe a score is enough.
-
-Still not sure what should go in the numerator and what should count as a cost.
-
----
-
-## 24 August 2026
-
 Built the first still beaver. It doesn't move yet.
 
-Started thinking more seriously about what the beaver should actually *do* rather than just exist on the screen.
-
-I think the basic loop should be something like: choose a tree → move to it → cut it → take the material to the dam → choose another tree.
-
-That sounds obvious when written down. I suspect coding it will be less obvious.
+Also thought about what the beaver should actually *do* , it should follow something like: choose a tree → move to it → cut it → take the material to the dam → choose another tree.
 
 ---
 
-## 25 August 2026
+## 18 August 2026
 
 Made a first tree-selection score and got the beaver moving towards the selected tree.
 
@@ -140,55 +111,46 @@ The project seems to be turning more into a probability / decision-making proble
 
 ---
 
-## 26 August 2026
+## 25 August 2026
 
 Tried to fix the missing transport step.
 
 Added a `carrying_to_dam` state so the beaver should move to the dam after cutting a tree instead of immediately selecting another one.
 
-It still didn't behave properly at first. Sometimes it looked like it had stopped, sometimes I couldn't tell whether it was moving to the dam or had already switched to something else.
+It still didn't behave properly at first. Sometimes it looked like it had stopped, I couldn't really tell whether it was moving to the dam or had already switched to something else.
 
-I realised I was basically debugging a state machine without being able to see the state.
+So I added the current state as text above the beaver's head: `idle`, `moving`, `cutting`, `carrying_to_dam`, which helps me better with identifying its current state.
 
-Added the current state as text above the beaver's head: `idle`, `moving`, `cutting`, `carrying_to_dam`.
+After a few fixes the whole loop finally worked.
 
-This looked a bit silly but was genuinely useful. I could finally see exactly when the state changed and work through the transitions one by one.
-
-After a few fixes the whole loop finally worked: choose → move → cut → carry → dam → choose again.
-
-Definitely not something I got right in one go.
 
 ---
 
-## 27 August 2026
+## 26 August 2026
 
 Connected delivered tree material to the dam.
 
 When a tree reaches the dam I calculate its cylindrical volume and add that material to the dam.
 
-This is the first point where the individual tree dimensions actually affect the dam rather than just the beaver's choice.
+Made a first version of the dam. At the moment it is basically rectangular. 
 
-Made a first version of the dam. At the moment it is basically rectangular.
+At this point, I realised I had just kept adding more and more things to the screen, but I had kind of lost sight of what I was actually trying to achieve with all of this.  
 
-Not sure yet what the dam should do with the material volume. Height seems like the most obvious thing to change first.
+I talked through possible directions with ChatGPT, and one suggestion was to focus on the hydraulic effect of the dam — how it changes the upstream and downstream water levels and flow. I liked that because it finally gave the dam something measurable to do, rather than just getting visually bigger.  So I decided to take the project in that direction.
+
+---
+
+## 27 August 2026
+
+Worked on dam growth.
+
+At first I was basically just increasing the dam height as more material arrived, but then I realized that thickness should increase as well.
+
+But I also don't know what relationship height and thickness should have, should I make them both proportional to the volume of the tree or what? 
 
 ---
 
 ## 28 August 2026
-
-Worked on dam growth.
-
-At first I was basically just increasing the dam height as more material arrived, but then I realised that creates another question: what happens to thickness?
-
-Should thickness stay constant while the dam gets taller? That feels wrong, because adding material should probably make it grow outward as well.
-
-But I also don't know what relationship height and thickness should have.
-
-For now I just need something that works.
-
----
-
-## 30 August 2026
 
 Came back to the randomness problem.
 
@@ -196,83 +158,51 @@ I originally thought generating a completely new forest every time was a good th
 
 But if I want to run experiments, that is actually annoying because changing one parameter also changes the whole forest.
 
-Found out about random seeds and set the seed to `42`.
-
-I really like this idea — it still comes from a random process, but I can reproduce exactly the same environment.
-
-Also reran the beaver loop a few times with the fixed forest. Much easier to tell whether a code change actually improved something when the trees don't move every time I press run.
+Found out about random seeds and set the seed to `42`, it still comes from a random process, but I can reproduce exactly the same environment.
 
 ---
 
-## 31 August 2026
-
-Got the construction sequence working end to end more reliably.
-
-There were still little things I kept adjusting: when exactly a tree disappears, when the beaver counts as having reached the dam, when the next target should be chosen, etc.
-
-None of these was a huge modelling decision, but together they made the difference between something that only *sometimes* worked and something I could actually run repeatedly.
-
----
-
-## 1 September 2026
+## 29 August 2026
 
 The visual problem came back when I started working on the dam.
 
 The top view works well for the river, trees and beaver, but I can't really show dam height properly from above.
 
-Made a second side view for the dam and water levels.
+So I made a second side view for the dam and water levels.
 
 The first version looked completely wrong because the vertical scale was not consistent with the top view. The water depth could suddenly look enormous and go way too high on the screen.
 
-Spent a while matching the side-view scale properly instead of just choosing pixel heights by eye.
+I definitely need to sort out the scale problems now, I'd like to make both graphs not only in a scale to reality but also to each other. But then the tree dimension problem stopped me again, maybe I should just define those rectangles as usable logs instead of actual trees. From now, everything is in a consistent proportion now this is so much clearer, Yay!
 
-Much clearer now.
+---
+
+## 1 September 2026
+
+Started adding water behaviour.
+
+I hade an upstream water depth and a downstream water depth. But they are literally just still rectangles right now. So I did more research on rules for how they change: both leakage and overtopping
 
 ---
 
 ## 2 September 2026
 
-Started adding water behaviour.
-
-I want the dam to actually *do* something rather than just get visually bigger.
-
-So now I have an upstream water depth and a downstream water depth.
-
-At first they were really just numbers being drawn in the side view. I still needed rules for how they change.
-
-There should probably be leakage through the material and overtopping if the upstream water gets above the dam.
-
----
-
-## 3 September 2026
-
-Added leakage.
-
-I'm using something based on Darcy's law:
-
-`flow ≈ conductivity × area × head difference / thickness`
+Added leakage based on Darcy's law:
 
 It is definitely simplified because a real beaver dam is not one uniform porous block.
 
-Also added a hydraulic conductivity parameter `K`.
-
-No idea yet what value is sensible enough for the baseline.
+Also added a hydraulic conductivity parameter `K`. No idea yet what value is sensible enough for the baseline.
 
 Another small complication: the wetted area should depend on how much of the dam is actually underwater, so I can't just use the full dam area all the time.
 
 ---
 
-## 4 September 2026
+## 3 September 2026
 
-Added overtopping.
-
-Using a simple weir-style relation where flow increases with overflow depth to the power `3/2`.
-
-Now the total dam flow is leakage + overtopping.
+Added overtopping, using a simple weir-style relation where flow increases with overflow depth to the power `3/2`.
 
 The first few versions were mostly me checking that one part wasn't accidentally giving negative flow or letting water "overtop" when it was actually below the relevant level.
 
-The model is starting to feel much more mathematical than it did a week ago.
+The model is starting to feel much more mathematical than it did a week ago :)
 
 ---
 
@@ -284,9 +214,7 @@ I set both to `0.05 m³/s`.
 
 The reason for making them equal is that I want the system to be able to settle instead of continuously gaining water.
 
-I'm slightly unsure about the actual magnitude of `0.05`. It is more of a baseline scenario than something calibrated to one real river.
-
-I think that's acceptable as long as I say so.
+And why 0.05? It is more of a baseline scenario than something calibrated to one real river. I guess I docent affect much?
 
 ---
 
