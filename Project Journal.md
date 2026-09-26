@@ -8,7 +8,7 @@ Some entries were written at the time, while some dates in the middle were recon
 
 ## 28 July 2026
 
-Did some research on beavers, mostly tree choice, how they build dams, what kinds of trees they seem to prefer etc.
+Did some research on beavers, mostly tree choice, how they build dams, what kinds of trees they seem to prefer, etc.
 
 The original thing I was interested in was actually whether a beaver could make things easier for itself by cutting a tree so that it falls towards the river.
 
@@ -36,8 +36,19 @@ Very basic at the moment but at least there is something visible now.
 
 Started adding trees.
 
-Used Python's `random` module to generate positions and stopped them from appearing in the river.
+Used Python's `random` module to generate positions and stopped them from appearing inside the river.
 
+The first version was a bit chaotic because trees could end up too close together or right against the river edge. Added a gap and some simple overlap checks. Not perfect, but much better.
+
+---
+
+## 14 August 2026
+
+Turned the trees into proper objects instead of just drawing random rectangles directly onto the screen.
+
+This made it much easier to give every tree its own position, dimensions and species later.
+
+I'm starting to understand why object-oriented programming is actually useful rather than just something people tell you to use.
 
 ---
 
@@ -45,7 +56,7 @@ Used Python's `random` module to generate positions and stopped them from appear
 
 The view is bothering me. The river is basically top-down, but the trees look more like little rectangles from the side. Should everything really be in one perspective?
 
-Also thought about using different colours for species because beavers have their preferences towards different species of trees.
+Also thought about using different colours for species because beavers have preferences for different species of trees.
 
 Then if I choose realistic species, should I also define a particular geographical location and climate for the whole model?
 
@@ -60,6 +71,8 @@ Added different tree species and colours.
 Also added random width and height instead of making every tree identical.
 
 I used triangular distributions to make my forest less artificial. I want middle-sized values to be more common but still allow some small and large ones.
+
+Had to remind myself that these dimensions are really more like usable wood dimensions in the model, not literal full-tree measurements. Otherwise the scale starts making no sense again.
 
 ---
 
@@ -77,48 +90,95 @@ Not completely sure how messy this will become when I add the dam.
 
 ---
 
+## 20 August 2026
+
+Cleaned up tree generation a bit more.
+
+I kept changing the ranges because some forests looked too uniform while others had a few ridiculous trees dominating everything visually.
+
+This is one of those things that looked simple at first — "just generate some trees" — but it actually took a few passes before it stopped looking obviously artificial.
+
+---
+
+## 22 August 2026
+
+Started thinking properly about how the beaver should choose trees.
+
+From the research I've done, central-place foraging seems useful here: distance matters, but so do the size and species of the tree.
+
+I don't want to pretend I'm modelling the beaver's actual energy budget, so maybe a score is enough.
+
+Still not sure what should go in the numerator and what should count as a cost.
+
+---
+
 ## 24 August 2026
 
-Build the first still beaver, not made it move yet.
+Built the first still beaver. It doesn't move yet.
 
-Started thinking more seriously about what the beaver should actually *do*.
+Started thinking more seriously about what the beaver should actually *do* rather than just exist on the screen.
 
-From the research I've done, I learnt that the beavers follow centre-foraging theory for their tree selecting, so maybe it's time to implement this to the model?
+I think the basic loop should be something like: choose a tree → move to it → cut it → take the material to the dam → choose another tree.
 
-
-## 25 August 2026
-
-Made a first tree-selecting score
-
-Got the beaver moving towards selected trees.
-
-Added different states for moving, cutting and carrying.
-
-The cutting part is extremely simplified. The beaver basically reaches the tree and then the model switches state — I'm not modelling an actual cutting process.
-
-The project seems to be turning more into a probability problem? like tree-selection mechanisms and dam-building model. But what can I do with this???
+That sounds obvious when written down. I suspect coding it will be less obvious.
 
 ---
 
 ## 25 August 2026
 
-Connected the tree to the dam.
+Made a first tree-selection score and got the beaver moving towards the selected tree.
 
-When a tree reaches the dam I calculate its cylindrical volume and add that material to the dam.
+Added rough states for moving and cutting.
 
-This is the first point where the individual tree dimensions actually affect the dam rather than just the beaver's choice.
+The cutting part is extremely simplified. The beaver basically reaches the tree and then the model waits briefly before switching state — I'm not modelling an actual cutting process.
 
-Not sure yet what shape the dam should be. For now I'm keeping it very simple.
+The first version had a fairly stupid problem: after cutting a tree, the beaver would just go on to choosing another tree. I had implemented the selection part before properly implementing the "take it to the dam" part.
+
+So at this point it could forage, but it wasn't really building anything.
+
+The project seems to be turning more into a probability / decision-making problem with a dam-building model attached. But what can I actually do with this mathematically???
+
+---
+
+## 26 August 2026
+
+Tried to fix the missing transport step.
+
+Added a `carrying_to_dam` state so the beaver should move to the dam after cutting a tree instead of immediately selecting another one.
+
+It still didn't behave properly at first. Sometimes it looked like it had stopped, sometimes I couldn't tell whether it was moving to the dam or had already switched to something else.
+
+I realised I was basically debugging a state machine without being able to see the state.
+
+Added the current state as text above the beaver's head: `idle`, `moving`, `cutting`, `carrying_to_dam`.
+
+This looked a bit silly but was genuinely useful. I could finally see exactly when the state changed and work through the transitions one by one.
+
+After a few fixes the whole loop finally worked: choose → move → cut → carry → dam → choose again.
+
+Definitely not something I got right in one go.
 
 ---
 
 ## 27 August 2026
 
-Made a first version of the dam.
+Connected delivered tree material to the dam.
 
-At the moment it is basically rectangular.
+When a tree reaches the dam I calculate its cylindrical volume and add that material to the dam.
 
-I also started thinking about thickness.
+This is the first point where the individual tree dimensions actually affect the dam rather than just the beaver's choice.
+
+Made a first version of the dam. At the moment it is basically rectangular.
+
+Not sure yet what the dam should do with the material volume. Height seems like the most obvious thing to change first.
+
+---
+
+## 28 August 2026
+
+Worked on dam growth.
+
+At first I was basically just increasing the dam height as more material arrived, but then I realised that creates another question: what happens to thickness?
 
 Should thickness stay constant while the dam gets taller? That feels wrong, because adding material should probably make it grow outward as well.
 
@@ -140,6 +200,18 @@ Found out about random seeds and set the seed to `42`.
 
 I really like this idea — it still comes from a random process, but I can reproduce exactly the same environment.
 
+Also reran the beaver loop a few times with the fixed forest. Much easier to tell whether a code change actually improved something when the trees don't move every time I press run.
+
+---
+
+## 31 August 2026
+
+Got the construction sequence working end to end more reliably.
+
+There were still little things I kept adjusting: when exactly a tree disappears, when the beaver counts as having reached the dam, when the next target should be chosen, etc.
+
+None of these was a huge modelling decision, but together they made the difference between something that only *sometimes* worked and something I could actually run repeatedly.
+
 ---
 
 ## 1 September 2026
@@ -148,11 +220,13 @@ The visual problem came back when I started working on the dam.
 
 The top view works well for the river, trees and beaver, but I can't really show dam height properly from above.
 
-I think I need a second view.
+Made a second side view for the dam and water levels.
 
-Made a side view for the dam and water levels.
+The first version looked completely wrong because the vertical scale was not consistent with the top view. The water depth could suddenly look enormous and go way too high on the screen.
 
-This feels much clearer already.
+Spent a while matching the side-view scale properly instead of just choosing pixel heights by eye.
+
+Much clearer now.
 
 ---
 
@@ -164,7 +238,7 @@ I want the dam to actually *do* something rather than just get visually bigger.
 
 So now I have an upstream water depth and a downstream water depth.
 
-Still trying to decide exactly how water should pass through the dam.
+At first they were really just numbers being drawn in the side view. I still needed rules for how they change.
 
 There should probably be leakage through the material and overtopping if the upstream water gets above the dam.
 
@@ -180,11 +254,11 @@ I'm using something based on Darcy's law:
 
 It is definitely simplified because a real beaver dam is not one uniform porous block.
 
-But I think it's a reasonable way of giving permeability a clear role.
-
 Also added a hydraulic conductivity parameter `K`.
 
 No idea yet what value is sensible enough for the baseline.
+
+Another small complication: the wetted area should depend on how much of the dam is actually underwater, so I can't just use the full dam area all the time.
 
 ---
 
@@ -195,6 +269,8 @@ Added overtopping.
 Using a simple weir-style relation where flow increases with overflow depth to the power `3/2`.
 
 Now the total dam flow is leakage + overtopping.
+
+The first few versions were mostly me checking that one part wasn't accidentally giving negative flow or letting water "overtop" when it was actually below the relevant level.
 
 The model is starting to feel much more mathematical than it did a week ago.
 
@@ -222,6 +298,8 @@ Upstream water changes according to inflow minus dam flow.
 
 Downstream water changes according to dam flow minus outflow.
 
+The first time I let it run continuously I kept watching the numbers because I wasn't sure whether the water levels were actually converging or just changing very slowly.
+
 This is also where I started thinking more carefully about equilibrium.
 
 At first I was mostly thinking "the water levels stop changing", but that really means the flows have to balance.
@@ -238,9 +316,11 @@ Added a settling phase.
 
 Once the beaver has delivered all the trees, the dam stops changing but the water is allowed to continue moving until it settles.
 
-I added a tolerance and made the balance condition hold for a few seconds before accepting equilibrium.
+My first equilibrium check was too easy to satisfy for a single instant, so I added a tolerance and made the balance condition hold for a few seconds before accepting equilibrium.
 
-Otherwise it can just pass through the condition for one frame.
+Otherwise the model can just pass through the condition for one frame and declare itself finished.
+
+This also means "equilibrium" in the code is numerical rather than perfectly exact, which I need to remember when I compare numbers later.
 
 ---
 
@@ -260,6 +340,8 @@ I tried a fairly large value first and the dam looked ridiculous, so I reduced i
 
 This is definitely one of those "I need something workable now and I can question it later" choices.
 
+I don't love that I picked `k` partly because the picture looked more reasonable. Need to come back to the geometry properly before calling the project finished.
+
 ---
 
 ## 9 September 2026
@@ -267,6 +349,8 @@ This is definitely one of those "I need something workable now and I can questio
 Started setting up experiments rather than only watching the animation.
 
 Made `experiment.py` so I can directly specify dam parameters and wait for equilibrium.
+
+The first version still depended too much on the full interactive simulation, so I separated the controlled experiment more clearly: start with a completed dam, reset both water depths, then let only the hydrology settle.
 
 This is much easier for comparing cases than running the full beaver construction every time.
 
@@ -286,21 +370,23 @@ Could just be because the dam is still submerged?
 
 Need to look at the actual equations rather than guessing from the graph.
 
+Also started saving the results instead of only printing them. Copying numbers out of the terminal is already getting annoying.
+
 ---
 
 ## 11 September 2026
 
 Looked at the low-height cases more carefully.
 
-For `H_d = 0.20`, `0.30`, etc. the downstream water is actually still above the dam crest.
+For the smallest `H_d` values, the downstream water is still above the dam crest, so the dam is completely submerged.
 
-So the dam is completely submerged.
+That at least explains why the regime is different from the higher-dam cases.
 
-Once I substitute the triangular/height-dependent geometry into the leakage equation, the height seems to cancel in this regime.
+The flat part still needs a proper mathematical explanation though. I don't want to just write "the graph looks flat" and leave it there.
 
-That might explain why the first part of the curve is flat.
+Started writing the equilibrium equation in terms of the head difference `ΔH` instead of staring at `H_u` and `H_down` separately.
 
-This was not something I intended when I wrote the model, which is kind of interesting.
+This is the first time the model feels like it is giving me a maths problem back.
 
 ---
 
@@ -310,45 +396,75 @@ Experiment 2: vary hydraulic conductivity `K`.
 
 As `K` increases, the head difference gets smaller.
 
-That makes intuitive sense because a more permeable dam can pass the same flow with less pressure/head difference.
+That makes intuitive sense because a more permeable dam can pass the same flow with less pressure / head difference.
 
-But something else happens near the end: overtopping disappears completely and leakage carries almost everything.
+But something else happens near the end: overtopping disappears completely and leakage carries everything.
 
 There seems to be a transition value of `K`.
 
 I want to know whether that transition is just a numerical accident or whether I can predict it.
 
+Tried plotting `K` on a log scale at first because the values cover quite a wide range. It technically worked, but the interesting points near the transition got squashed together and the graph was harder to read than it needed to be.
+
+Changed the plotting range and added more `K` values around the transition instead.
+
 ---
 
 ## 13 September 2026
 
-Made the analysis script and started producing the final plots from CSV data instead of manually copying results.
+Made the analysis script and started producing the figures from CSV data instead of manually copying results.
 
 Workflow is now basically:
 
 `experiment.py → CSV → analysis.py → figures`
 
-This is much cleaner.
+Much cleaner.
 
-Also started paying more attention to the transition regions instead of only the overall curves.
+Also finally did a proper reality check on the dam geometry because the `T = T0 + kH_d` rule was still bothering me.
+
+Found literature suggesting wooden beaver dams are much wider than they are high, with a roughly triangular cross-section and an average width-to-height ratio around `2.9`.
+
+This is annoying because it means the geometry I've been using for the experiments is probably the weakest part of the model.
+
+I could leave it because the code already works, but that feels like a bad reason to keep an assumption.
+
+Decided to change it.
 
 ---
 
 ## 14 September 2026
 
-Spent most of today trying to explain the results mathematically.
+Changed the dam from the old rectangular / linear-thickness version to a triangular cross-section with
 
-For Experiment 1, the submerged plateau now makes more sense.
+`T = 2.9H_d`.
 
-For Experiment 2, I can estimate the point where the upstream water surface drops to the dam crest. That should be exactly where overtopping becomes zero.
+This broke more things than I hoped.
 
-I didn't expect to end up doing this much equilibrium analysis when I started the project.
+The side-view drawing needed changing, the final height changed, and the old experiment results were no longer the results of the final model.
 
-At the beginning I was mostly worried about getting a beaver to move towards a tree.
+For the picture I made the upstream face shallower and the downstream face steeper. The exact asymmetry is mostly visual, but it looks much more like the dam shape I found in the literature.
+
+The completed seed-42 dam is now only around `0.44 m` high. My first reaction was that 80 trees suddenly looked like "not enough", but increasing the tree count just to make the dam taller would be cheating the model a bit. So I kept it.
+
+Reran Experiment 1 with the new geometry. The low-height plateau is still there, and now I can actually see why: in the fully submerged regime, the `H_d` terms cancel out of the leakage part because wetted area and thickness both scale with dam height.
+
+That was satisfying because this time the flat section isn't just something I noticed in the plot.
 
 ---
 
 ## 15 September 2026
+
+Reran Experiment 2 with the final triangular dam.
+
+The mixed-flow → leakage-only transition moved a lot compared with the earlier geometry, now to about `K = 0.31–0.32 m/s`.
+
+At first I thought I might have broken something because the threshold had shifted so much. But the thicker dam reduces leakage for the same conductivity, so it actually makes sense that a much larger `K` is needed before leakage alone can carry the whole flow.
+
+Worked out the threshold analytically and got about `K = 0.312 m/s`, which is very close to what the numerical experiment shows.
+
+Did one more pass through the code and fixed a couple of things that only showed up when I tried to reproduce everything carefully: an equilibrium hold-time variable-name typo, and the dam-height calculation not including the initial dam volume correctly.
+
+Reran the baseline and experiments after the fixes.
 
 Main modelling stage finished.
 
@@ -356,17 +472,18 @@ At this point the project has:
 
 - a reproducible forest;
 - a tree-selection rule;
-- beaver transport;
-- dam growth;
+- a beaver state / transport loop;
+- dam growth from delivered wood volume;
+- a triangular final dam geometry;
 - upstream/downstream water storage;
 - leakage and overtopping;
 - an equilibrium condition;
 - two controlled experiments;
 - numerical plots and equilibrium analysis.
 
-There are still assumptions I don't fully trust, especially dam geometry and some of the physical parameter choices.
+There are still assumptions I don't fully trust. `K` is only one effective permeability value, the river is basically two storage boxes, the overtopping law is simplified, and the beaver eventually uses every tree anyway.
 
-But I think that is also the point where I should stop adding features and start checking what I have actually built.
+But I think this is also the point where I should stop adding features and start documenting what I have actually built.
 
 The project ended up being very different from my original tree-fall question.
 
