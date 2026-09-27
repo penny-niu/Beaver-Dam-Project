@@ -6,6 +6,30 @@ The project did not begin with all of these equations already worked out. Some o
 
 The model is deliberately simplified. The aim is not to reproduce every detail of a real river or beaver dam, but to make the assumptions explicit enough that I can understand what drives the results.
 
+## Model structure
+
+The final model combines an agent-based construction simulation with a simplified hydraulic model.
+
+The construction part generates a forest, lets the beaver select and transport wood, and converts delivered material into dam geometry. The hydraulic part then uses that geometry to calculate leakage and overtopping while upstream and downstream water depths evolve through mass-balance equations.
+
+The overall sequence is:
+
+`forest → tree selection → transport → dam growth → hydraulic response → equilibrium`
+
+The behavioural part is mainly a heuristic mechanism for generating and transporting construction material, while most of the mathematical analysis focuses on the hydraulic response and equilibrium behaviour.
+
+### Roles of different quantities in the model
+
+| Role | Examples |
+|---|---|
+| Generated | tree positions, species, usable dimensions |
+| Behavioural | selected tree, cutting and transport sequence |
+| Dynamic | dam height during construction, `H_u`, `H_down` |
+| Prescribed baseline parameters | `W`, `Q_in`, `Q_out`, `K`, geometry ratio |
+| Main outputs | equilibrium `ΔH`, leakage, overtopping, settling time |
+
+This distinction is useful because not every quantity in the model plays the same role: some are generated, some evolve through the simulation, some are fixed as scenario assumptions, and others are measured as outputs.
+
 ---
 
 ## 1. Main notation and baseline parameters
