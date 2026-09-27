@@ -376,7 +376,7 @@ Reran Experiment 2 with the triangular dam and immediately got confused.
 
 I first used roughly the same `K` range as before, but the leakage-only transition had basically disappeared. For a moment I thought I had broken the model again.
 
-So I kept extending the `K` values upwards: `0.1 → 0.2 → 0.25 → 0.28 → 0.30 → 0.31 → 0.32`. Eventually found the transition again around `0.31–0.32 m/s`.
+So I kept extending the `K` values upwards, eventually found the transition again around `0.31–0.32 m/s`.
 
 That is *way* higher than the old value around `0.046–0.047 m/s`.
 
@@ -400,7 +400,7 @@ Fixed both and reran the baseline and experiments again. Everything is reproduci
 
 ---
 
-## 26 September 2026
+## 22 September 2026
 
 Started properly cleaning up the documentation.
 
@@ -410,10 +410,10 @@ Also worked through the research notes and tried to separate things I actually f
 
 ---
 
-## 27 September 2026
+## 24 September 2026
 
 Cleaned up the mathematical notes and added a short overview of how the behavioural and hydraulic parts connect.
 
 I originally thought I should also make a separate modelling file, but at this point it was mostly repeating the same story again, so I decided against it.
 
-README left.
+Only README left.
