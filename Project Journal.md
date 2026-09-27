@@ -1,6 +1,6 @@
 # Project Journal
 
-A rough journal of how the project developed, sometimes I was too lazy to keep a record 
+A rough journal of how the project developed. I definitely wasn't disciplined enough to write everything down while I was actually working, so some parts were filled in later from my code and what I could remember. A few dates might be slightly off and I'm sure I've missed some tiny details, but I still wanted to keep a reasonably complete record of what happened rather than only showing the final version.
 
 ---
 
@@ -180,7 +180,7 @@ I definitely need to sort out the scale problems now, I'd like to make both grap
 
 Started adding water behaviour.
 
-I hade an upstream water depth and a downstream water depth. But they are literally just still rectangles right now. So I did more research on rules for how they change: both leakage and overtopping
+I hade an upstream water depth and a downstream water depth. But they are just still rectangles right now. So I did more research on rules for how they change: both leakage and overtopping
 
 ---
 
@@ -214,7 +214,7 @@ I set both to `0.05 m³/s`.
 
 The reason for making them equal is that I want the system to be able to settle instead of continuously gaining water.
 
-And why 0.05? It is more of a baseline scenario than something calibrated to one real river. I guess I docent affect much?
+And why 0.05? It is more of a baseline scenario than something calibrated to one real river. I guess it doesn't affect much?
 
 ---
 
@@ -228,7 +228,7 @@ Downstream water changes according to dam flow minus outflow.
 
 The first time I let it run continuously I kept watching the numbers because I wasn't sure whether the water levels were actually converging or just changing very slowly.
 
-This is also where I started thinking more carefully about equilibrium.
+So I started thinking more carefully about equilibrium.
 
 At first I was mostly thinking "the water levels stop changing", but that really means the flows have to balance.
 
@@ -244,9 +244,7 @@ Added a settling phase.
 
 Once the beaver has delivered all the trees, the dam stops changing but the water is allowed to continue moving until it settles.
 
-My first equilibrium check was too easy to satisfy for a single instant, so I added a tolerance and made the balance condition hold for a few seconds before accepting equilibrium.
-
-Otherwise the model can just pass through the condition for one frame and declare itself finished.
+My first equilibrium check was too easy to satisfy for a single instant, so I added a tolerance and made the balance condition hold for a few seconds before accepting equilibrium. Otherwise the model can just pass through the condition for one frame and declare itself finished.
 
 This also means "equilibrium" in the code is numerical rather than perfectly exact, which I need to remember when I compare numbers later.
 
@@ -262,25 +260,21 @@ Tried making thickness increase with dam height:
 
 `T = T0 + kH_d`
 
-I don't really know what `k` should be.
+I don't really know what `k` should be. 
 
 I tried a fairly large value first and the dam looked ridiculous, so I reduced it.
-
-This is definitely one of those "I need something workable now and I can question it later" choices.
-
-I don't love that I picked `k` partly because the picture looked more reasonable. Need to come back to the geometry properly before calling the project finished.
 
 ---
 
 ## 9 September 2026
 
-Started setting up experiments rather than only watching the animation.
+Started setting up experiments.
 
 Made `experiment.py` so I can directly specify dam parameters and wait for equilibrium.
 
-The first version still depended too much on the full interactive simulation, so I separated the controlled experiment more clearly: start with a completed dam, reset both water depths, then let only the hydrology settle.
-
-This is much easier for comparing cases than running the full beaver construction every time.
+Started setting up the experiments separately from the main simulation. So the beaver doesn't need to build the dam from scratch every time I wanted to test one hydraulic parameter.
+Instead, each experiment starts with a dam whose geometry I specify directly, resets both water depths to the same initial value, and then lets only the hydrology run until equilibrium.
+This also makes the comparisons much cleaner because I can change one parameter at a time while keeping the starting conditions the same.
 
 ---
 
@@ -292,13 +286,9 @@ I expected higher dams to create a larger difference between upstream and downst
 
 That does happen eventually, but the first few points are almost flat.
 
-I don't really understand why yet.
-
-Could just be because the dam is still submerged?
-
 Need to look at the actual equations rather than guessing from the graph.
 
-Also started saving the results instead of only printing them. Copying numbers out of the terminal is already getting annoying.
+Also started saving the results instead of only printing them, which saves me from copying numbers out of the terminal each time.
 
 ---
 
@@ -314,13 +304,11 @@ The flat part still needs a proper mathematical explanation though. I don't want
 
 Started writing the equilibrium equation in terms of the head difference `ΔH` instead of staring at `H_u` and `H_down` separately.
 
-This is the first time the model feels like it is giving me a maths problem back.
-
 ---
 
 ## 12 September 2026
 
-Experiment 2: vary hydraulic conductivity `K`.
+Started Experiment 2: vary hydraulic conductivity `K`.
 
 As `K` increases, the head difference gets smaller.
 
@@ -342,13 +330,9 @@ Changed the plotting range and added more `K` values around the transition inste
 
 Made the analysis script and started producing the figures from CSV data instead of manually copying results.
 
-Workflow is now basically:
+Workflow is now basically:    `experiment.py → CSV → analysis.py → figures` 
 
-`experiment.py → CSV → analysis.py → figures`
-
-Much cleaner.
-
-Also finally did a proper reality check on the dam geometry because the `T = T0 + kH_d` rule was still bothering me.
+Also did a proper reality check on the dam geometry because the `T = T0 + kH_d` rule was still bothering me.
 
 Found literature suggesting wooden beaver dams are much wider than they are high, with a roughly triangular cross-section and an average width-to-height ratio around `2.9`.
 
@@ -372,11 +356,9 @@ The side-view drawing needed changing, the final height changed, and the old exp
 
 For the picture I made the upstream face shallower and the downstream face steeper. The exact asymmetry is mostly visual, but it looks much more like the dam shape I found in the literature.
 
-The completed seed-42 dam is now only around `0.44 m` high. My first reaction was that 80 trees suddenly looked like "not enough", but increasing the tree count just to make the dam taller would be cheating the model a bit. So I kept it.
+The completed seed-42 dam is now only around `0.44 m` high. My first reaction was that 80 logs suddenly looked like "not enough", but increasing the tree count just to make the dam taller would be cheating the model a bit. So I kept it.
 
 Reran Experiment 1 with the new geometry. The low-height plateau is still there, and now I can actually see why: in the fully submerged regime, the `H_d` terms cancel out of the leakage part because wetted area and thickness both scale with dam height.
-
-That was satisfying because this time the flat section isn't just something I noticed in the plot.
 
 ---
 
@@ -390,7 +372,7 @@ At first I thought I might have broken something because the threshold had shift
 
 Worked out the threshold analytically and got about `K = 0.312 m/s`, which is very close to what the numerical experiment shows.
 
-Did one more pass through the code and fixed a couple of things that only showed up when I tried to reproduce everything carefully: an equilibrium hold-time variable-name typo, and the dam-height calculation not including the initial dam volume correctly.
+Did one more pass through the code and fixed a couple of things that I didn't notice earlier: an equilibrium hold-time variable-name typo, and the dam-height calculation not including the initial dam volume correctly.
 
 Reran the baseline and experiments after the fixes.
 
@@ -413,6 +395,4 @@ There are still assumptions I don't fully trust. `K` is only one effective perme
 
 But I think this is also the point where I should stop adding features and start documenting what I have actually built.
 
-The project ended up being very different from my original tree-fall question.
 
-I don't think that's necessarily bad. It feels more like I followed whatever problem appeared next rather than knowing from the beginning what the final model was supposed to be.
