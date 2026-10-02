@@ -137,7 +137,6 @@ Because the simulation uses the fixed random seed `42`, the same set of tree pos
 
 ---
 
-
 ## 3. Beaver tree-selection model
 
 The behavioural part of the model uses a simplified central-place-foraging-inspired score.
@@ -1080,7 +1079,7 @@ Varying discharge would be a useful future sensitivity experiment.
 
 ---
 
-## 15. Numerical implementation and timescales
+## 15. Numerical implementation and verification
 
 The interactive construction simulation and the controlled experiments use slightly different timing approaches.
 
@@ -1127,6 +1126,40 @@ dt = clock.tick(FPS) / 1000.0
 By contrast, the controlled experiments use a fixed time step of **0.1 s**, so every parameter case is integrated using the same numerical step.
 
 These timing choices affect the numerical evolution and reported settling time, but they are simulation settings rather than claims about the real timescale of beaver construction.
+
+### 15.4 Independent equilibrium verification
+
+The controlled experiments obtain equilibrium by stepping the water-balance equations forward in time until the flow residuals stay within the chosen tolerance. I later added a second numerical route so that the time-stepping simulation was not the only way of finding the equilibrium state.
+
+Because total stored water is conserved, both water depths can be written in terms of the single variable `ΔH`. For a fixed dam geometry and hydraulic conductivity, define the equilibrium residual
+
+```math
+R(\Delta H)
+=
+Q_{\mathrm{in}}
+-
+\left[Q_{\mathrm{leak}}(\Delta H)+Q_{\mathrm{overtop}}(\Delta H)\right]
+```
+
+At equilibrium,
+
+```math
+\boxed{R(\Delta H)=0}
+```
+
+The script `verify_equilibrium.py` solves this one-variable root problem directly using SciPy's `root_scalar` function with Brent's method, then compares the result with the head difference produced by the original time-stepping experiment.
+
+Across the current hydraulic-conductivity sweep, the maximum absolute difference between the two equilibrium head differences is approximately
+
+```math
+1.85\times10^{-4}\ \mathrm{m}
+```
+
+or about **0.19 mm**.
+
+This is small relative to the head differences being measured. It gives an independent numerical check that the time-stepping runs are settling close to the root of the governing equilibrium equation rather than only appearing visually stable.
+
+The saved experiment data are loaded with pandas for this comparison, but pandas is mainly a data-handling tool here; the additional mathematical check comes from solving the equilibrium equation independently.
 
 ---
 
