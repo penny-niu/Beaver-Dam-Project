@@ -99,9 +99,9 @@ class World:
 
     def update(self, dt):
 
-    # =====================================
+   
     # PHASE 1: Beaver builds the dam
-    # =====================================
+
 
         if self.phase == "construction":
 
@@ -125,9 +125,9 @@ class World:
                 print(f"Total delivered wood volume: "f"{self.dam.material_volume:.6f} m^3")
 
 
-    # =====================================
+
     # PHASE 2: Dam frozen, water keeps moving
-    # =====================================
+      
 
         elif self.phase == "settling":
 
