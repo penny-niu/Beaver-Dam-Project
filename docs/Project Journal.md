@@ -416,4 +416,24 @@ Cleaned up the mathematical notes and added a short overview of how the behaviou
 
 I originally thought I should also make a separate modelling file, but at this point it was mostly repeating the same story again, so I decided against it.
 
-Only README left.
+Finished the README.
+
+---
+
+## 28 September 2026
+
+Updated `analysis.py` to use pandas for loading and working with the experiment CSV files.
+
+This made the analysis workflow cleaner without changing the experiment results.
+
+---
+
+## 30 September 2026
+
+Added `verify_equilibrium.py` to check the equilibrium results independently.
+
+Rewrote the equilibrium condition as a one-variable equation in `ΔH` and used SciPy `root_scalar` to solve it directly.
+
+The SciPy results were very close to the original time-stepping results.
+
+Also cleaned up the repository structure and grouped the code and documentation into separate folders.
