@@ -85,14 +85,22 @@ Finding this transition took a little more work than I expected. After changing 
 
 The equilibrium equations then gave an analytical critical value of about **K = 0.312**, which was reassuringly close to the numerical transition.
 
+## Numerical verification
+
+The controlled experiments find equilibrium by stepping the water-balance equations forward in time until the flow residuals stay within the chosen tolerance.
+
+I later added a separate check in `verify_equilibrium.py` because I did not want the time-stepping simulation to be the only numerical route to the answer. The script rewrites the equilibrium condition as a one-variable residual in the head difference `ΔH`, then uses SciPy's `root_scalar` method to solve directly for the root.
+
+It loads the conductivity experiment with pandas and compares the SciPy root with the equilibrium head difference produced by the original simulation. This gives me an independent numerical check of the same governing balance equation, rather than simply trusting that the time-stepping code has settled to the right value.
+
 ## Running the project
 
-The interactive simulation uses `pygame-ce`, and the analysis figures use `matplotlib`.
+The interactive simulation uses `pygame-ce`, the experiment analysis uses `pandas` and `matplotlib`, and the independent equilibrium check uses `scipy`.
 
-Install the main dependencies:
+Install the dependencies:
 
 ```bash
-pip install pygame-ce matplotlib
+pip install -r requirements.txt
 ```
 
 Run the interactive simulation:
@@ -115,6 +123,12 @@ Generate the analysis figures:
 python3 analysis.py
 ```
 
+Run the independent equilibrium check:
+
+```bash
+python3 verify_equilibrium.py
+```
+
 ## Repository structure
 
 - `main.py` — runs the interactive simulation
@@ -125,8 +139,10 @@ python3 analysis.py
 - `river.py` — river and hydraulic flow calculations
 - `side_view.py` — visualisation of dam and water levels
 - `experiment.py` — controlled equilibrium experiments
-- `analysis.py` — analysis and plotting of experiment results
+- `analysis.py` — loads and analyses experiment data with pandas and generates figures with matplotlib
+- `verify_equilibrium.py` — independently solves the equilibrium condition with SciPy and compares it with the time-stepping results
 - `settings.py` — model parameters and constants
+- `requirements.txt` — Python dependencies
 - `results/` — experiment data and figures
 
 ## Further documentation
