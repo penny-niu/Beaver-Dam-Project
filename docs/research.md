@@ -285,39 +285,6 @@ The treatment of a fully submerged dam is also simplified and should not be inte
 
 ---
 
-## 11. What this research does — and does not — let me claim
-
-After going through the project again, I think this distinction is important.
-
-Research gives me reasonable support for the following general ideas:
-
-- beaver foraging is affected by distance from water;
-- tree size and species can influence selection;
-- small streams are common dam-building environments;
-- wooden beaver dams can have triangular, asymmetric cross-sections;
-- beaver dams are permeable rather than perfectly solid barriers;
-- real dams contain more than wood alone.
-
-There are still many things that remain my own modelling assumptions:
-
-- exact species-generation probabilities;
-- exact species-preference weights;
-- the tree-selection equation;
-- the cutting-cost coefficient;
-- the choice of 80 tree agents;
-- the triangular distributions used for usable wood dimensions;
-- baseline conductivity `K = 0.01 m/s`;
-- fixed inflow and outflow of `0.05 m³/s`;
-- the simplified two-storage river geometry;
-- the 70:30 visual slope split;
-- the overtopping coefficient.
-
-I do not see that as something to disguise.
-
-The point of the project was not to produce a perfectly calibrated ecological or hydraulic simulator. It was to build a model from scratch, question its assumptions, compare them with real evidence, and revise the model when the evidence showed that something no longer made sense.
-
----
-
 ## References
 
 [1] Haarberg, O. & Rosell, F. (2006). *Selective foraging on woody plant species by the Eurasian beaver (Castor fiber) in Telemark, Norway*. **Journal of Zoology, 270**, 201–208. DOI: [10.1111/j.1469-7998.2006.00142.x](https://doi.org/10.1111/j.1469-7998.2006.00142.x)
