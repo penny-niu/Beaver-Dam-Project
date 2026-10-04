@@ -103,7 +103,7 @@ Added rough states for moving and cutting.
 
 The cutting part is extremely simplified. The beaver basically reaches the tree and then the model waits briefly before switching state — I'm not modelling an actual cutting process.
 
-The first version had a fairly stupid problem: after cutting a tree, the beaver would just go on to choosing another tree. I had implemented the selection part before properly implementing the "take it to the dam" part.
+The first version had a simple but important problem: after cutting a tree, the beaver would just go on to choosing another tree. I had implemented the selection part before properly implementing the "take it to the dam" part.
 
 So at this point it could forage, but it wasn't really building anything.
 
@@ -178,7 +178,7 @@ I think the main problem is that I've been treating those rectangles as whole tr
 
 So from now on I'm going to treat each "tree" in the simulation as a usable piece of wood / log rather than a literal whole tree. The code can still call them trees, but their dimensions represent usable wood.
 
-This also makes the top view and side view much easier to keep in proportion. This is so much clearer. Yay!
+This also makes the top view and side view much easier to keep in proportion. This is so much clearer. 
 
 ---
 
@@ -220,7 +220,7 @@ I set both to `0.05 m³/s`.
 
 The reason for making them equal is that I want the system to be able to settle instead of continuously gaining water.
 
-And why 0.05? It is more of a baseline scenario than something calibrated to one real river. I guess the exact value doesn't matter too much for now? I can come back to it later.
+For now I treated 0.05 m³/s as a baseline scenario rather than a calibrated value for a specific river, with the intention of testing sensitivity later.
 
 ---
 
@@ -268,7 +268,7 @@ Tried making thickness increase with dam height:
 
 I don't really know what `k` should be. 
 
-I tried a fairly large value first and the dam looked ridiculous, so I reduced it.
+I tried a fairly large value first and the resulting geometry was clearly unrealistict, so I reduced it.
 
 ---
 
@@ -344,7 +344,7 @@ Also did a proper reality check on the dam geometry because the `T = T0 + kH_d` 
 
 Found literature suggesting wooden beaver dams are much wider than they are high, with a roughly triangular cross-section and an average width-to-height ratio around `2.9`.
 
-This is annoying because it means the geometry I've been using for the experiments is probably the weakest part of the model.
+This was important because it suggested that the geometry used in the earlier experiments was probably the weakest assumption in the model.
 
 I could leave it because the code already works, but that feels like a bad reason to keep an assumption.
 
@@ -374,11 +374,11 @@ Reran Experiment 1 with the new geometry. The low-height plateau is still there,
 
 Reran Experiment 2 with the triangular dam and immediately got confused.
 
-I first used roughly the same `K` range as before, but the leakage-only transition had basically disappeared. For a moment I thought I had broken the model again.
+The leakage-only transition initially seemed to disappear when I reran Experiment 2 with the triangular dam. For a moment I thought I had broken the model again.
 
 So I kept extending the `K` values upwards, eventually found the transition again around `0.31–0.32 m/s`.
 
-That is *way* higher than the old value around `0.046–0.047 m/s`.
+That was substantially higher than the previous value of about `0.046–0.047 m/s`.
 
 After looking back at the geometry, it actually makes sense. The new triangular dam is much thicker, so the same conductivity gives less leakage. `K` has to be much larger before leakage can carry the whole flow by itself.
 
