@@ -1,6 +1,6 @@
 # Project Journal
 
-A rough journal of how the project developed. I definitely wasn't disciplined enough to write everything down while I was actually working, so some parts were filled in later from my code and what I could remember. A few dates might be slightly off and I'm sure I've missed some tiny details, but I still wanted to keep a reasonably complete record of what happened rather than only showing the final version.
+A rough journal of how the project developed. Some entries were reconstructed later from my code and notes, so a few dates are approximate, but I wanted to keep a record of how the model changed rather than only showing the final version.
 
 ---
 
