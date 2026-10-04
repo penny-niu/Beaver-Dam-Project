@@ -136,7 +136,7 @@ Made a first version of the dam. At the moment it is basically rectangular.
 
 At this point, I realised I had just kept adding more and more things to the screen, but I had kind of lost sight of what I was actually trying to achieve with all of this.  
 
-I talked through possible directions with ChatGPT, and one suggestion was to focus on the hydraulic effect of the dam — how it changes the upstream and downstream water levels and flow. I liked that because it finally gave the dam something measurable to do, rather than just getting visually bigger.  So I decided to take the project in that direction.
+I started thinking about directions that would give the model something more measurable to investigate, and decided to focus on the hydraulic effect of the dam — how it changes upstream and downstream water levels and flow. That gave the project a much clearer mathematical direction.
 
 ---
 
